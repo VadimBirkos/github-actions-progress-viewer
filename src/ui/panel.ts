@@ -8,14 +8,14 @@ const STYLES = `
   position: fixed;
   top: 60px;
   right: 0;
-  width: 340px;
+  width: 420px;
   max-height: calc(100vh - 80px);
   background: #161b22;
   border: 1px solid #30363d;
   border-right: none;
   border-radius: 6px 0 0 6px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.5;
   color: #e6edf3;
   z-index: 99999;
@@ -30,11 +30,11 @@ const STYLES = `
 #ghash-panel .ghash-header {
   display: flex;
   align-items: center;
-  padding: 0 8px;
+  padding: 0 10px;
   background: #0d1117;
   border-bottom: 1px solid #30363d;
   flex-shrink: 0;
-  height: 36px;
+  height: 40px;
   gap: 8px;
   user-select: none;
   cursor: default;
@@ -42,7 +42,7 @@ const STYLES = `
 #ghash-panel .ghash-title {
   flex: 1;
   font-weight: 600;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.3px;
   text-transform: uppercase;
   color: #8b949e;
@@ -101,9 +101,9 @@ const STYLES = `
 }
 
 #ghash-panel .ghash-message {
-  padding: 16px 14px;
+  padding: 20px 16px;
   color: #8b949e;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.6;
   text-align: center;
 }
@@ -115,43 +115,43 @@ const STYLES = `
 #ghash-panel .ghash-job-header {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 10px;
+  gap: 8px;
+  padding: 9px 12px;
   cursor: pointer;
   user-select: none;
 }
 #ghash-panel .ghash-job-header:hover { background: #1c2128; }
 
-#ghash-panel .ghash-job-icon { flex-shrink: 0; font-size: 12px; width: 14px; text-align: center; }
+#ghash-panel .ghash-job-icon { flex-shrink: 0; font-size: 13px; width: 16px; text-align: center; }
 #ghash-panel .ghash-job-name {
   flex: 1;
   font-weight: 500;
-  font-size: 12px;
+  font-size: 13px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#ghash-panel .ghash-job-meta { flex-shrink: 0; color: #8b949e; font-size: 10px; }
-#ghash-panel .ghash-job-chevron { flex-shrink: 0; color: #484f58; font-size: 9px; }
+#ghash-panel .ghash-job-meta { flex-shrink: 0; color: #8b949e; font-size: 11px; }
+#ghash-panel .ghash-job-chevron { flex-shrink: 0; color: #484f58; font-size: 10px; }
 
-#ghash-panel .ghash-steps { background: #0d1117; padding: 2px 0 6px; }
+#ghash-panel .ghash-steps { background: #0d1117; padding: 2px 0 8px; }
 
 #ghash-panel .ghash-step {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 10px 3px 30px;
+  gap: 7px;
+  padding: 4px 12px 4px 34px;
   border-left: 2px solid transparent;
 }
 #ghash-panel .ghash-step.ghash-step-active {
   border-left-color: #58a6ff;
   background: rgba(88,166,255,0.06);
-  padding-left: 28px;
+  padding-left: 32px;
 }
-#ghash-panel .ghash-step-icon { flex-shrink: 0; font-size: 10px; width: 12px; text-align: center; }
+#ghash-panel .ghash-step-icon { flex-shrink: 0; font-size: 11px; width: 13px; text-align: center; }
 #ghash-panel .ghash-step-name {
   flex: 1;
-  font-size: 11px;
+  font-size: 12px;
   color: #6e7681;
   overflow: hidden;
   text-overflow: ellipsis;
