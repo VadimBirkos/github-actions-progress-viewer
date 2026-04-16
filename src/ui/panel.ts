@@ -288,7 +288,7 @@ export class Panel {
   }
 
   setNeedsToken(): void {
-    this.setMessage('Private repository — add a personal access token in the extension popup.', false);
+    this.setMessage('Private repo or insufficient permissions — add or update your personal access token in the extension popup.', false);
   }
 
   update(jobs: JobState[]): void {

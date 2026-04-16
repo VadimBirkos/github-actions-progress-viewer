@@ -82,8 +82,8 @@ class ContentScript {
         return;
       }
 
-      if (response.error === 'UNAUTHORIZED') {
-        log.warn('Unauthorized — stopping poll');
+      if (response.error === 'UNAUTHORIZED' || response.error === 'FORBIDDEN') {
+        log.warn('Auth error — stopping poll:', response.error);
         panel.setNeedsToken();
         poller.stop();
         return;
