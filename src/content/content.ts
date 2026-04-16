@@ -3,6 +3,7 @@ import { parseRunContext } from '../utils/url';
 import { Panel } from '../ui/panel';
 import { InlineSteps } from '../ui/inline';
 import { Poller } from '../utils/polling';
+import { setRunContext, clearRunContext } from '../utils/storage';
 import { log } from '../utils/logger';
 
 const POLL_INTERVAL_MS = 7000;
@@ -55,6 +56,7 @@ class ContentScript {
   private activate(context: WorkflowRunContext): void {
     this.deactivate();
     this.currentRunId = context.runId;
+    setRunContext(context).catch(() => undefined);
 
     const panel = new Panel();
     panel.mount();
@@ -116,6 +118,7 @@ class ContentScript {
 
   private deactivate(): void {
     if (this.currentRunId) log.info('Deactivating run', this.currentRunId);
+    clearRunContext().catch(() => undefined);
     this.poller?.stop();
     this.poller = null;
     this.panel?.unmount();

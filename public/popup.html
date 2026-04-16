@@ -8,24 +8,43 @@
 </head>
 <body>
   <div class="container">
+
     <div class="header">
-      <h1>Actions Step Highlighter</h1>
-      <button id="resize" class="btn-resize" title="Expand popup">⤢</button>
+      <span class="logo">⚡ Actions</span>
+      <nav class="tabs">
+        <button class="tab active" data-tab="jobs">Jobs</button>
+        <button class="tab" data-tab="settings">Settings</button>
+      </nav>
+      <button id="resize" class="btn-icon" title="Expand popup">⤢</button>
     </div>
-    <p class="hint">
-      Public repos work without a token. For private repos, provide a
-      <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">personal access token</a>
-      with <code>repo</code> scope.
-    </p>
-    <div class="field">
-      <label for="token">Personal Access Token</label>
-      <input type="password" id="token" placeholder="ghp_…" autocomplete="off" spellcheck="false">
+
+    <!-- Jobs tab -->
+    <div id="tab-jobs" class="tab-pane">
+      <div id="jobs-body" class="jobs-body">
+        <div class="state-msg">Open a GitHub Actions run page to see jobs.</div>
+      </div>
     </div>
-    <div class="actions">
-      <button id="save" class="btn-primary">Save</button>
-      <button id="clear" class="btn-secondary">Clear</button>
+
+    <!-- Settings tab -->
+    <div id="tab-settings" class="tab-pane hidden">
+      <div class="settings-body">
+        <p class="hint">
+          Public repos work without a token. For private repos, add a
+          <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">personal access token</a>
+          with <code>repo</code> scope.
+        </p>
+        <div class="field">
+          <label for="token">Personal Access Token</label>
+          <input type="password" id="token" placeholder="ghp_…" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="actions">
+          <button id="save" class="btn-primary">Save</button>
+          <button id="clear" class="btn-secondary">Clear</button>
+        </div>
+        <div id="status" class="status" aria-live="polite"></div>
+      </div>
     </div>
-    <div id="status" class="status" aria-live="polite"></div>
+
   </div>
   <script src="popup.js"></script>
 </body>
