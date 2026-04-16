@@ -1,7 +1,6 @@
 import { WorkflowRunContext, JobState } from '../types';
 import { parseRunContext } from '../utils/url';
 import { Panel } from '../ui/panel';
-import { InlineSteps } from '../ui/inline';
 import { Poller } from '../utils/polling';
 import { setRunContext, clearRunContext } from '../utils/storage';
 import { log } from '../utils/logger';
@@ -11,7 +10,6 @@ const SLOW_POLL_INTERVAL_MS = 30000;
 
 class ContentScript {
   private panel: Panel | null = null;
-  private inline: InlineSteps | null = null;
   private poller: Poller | null = null;
   private currentRunId: string | null = null;
 
@@ -33,7 +31,6 @@ class ContentScript {
   }
 
   private watchNavigation(): void {
-    // Intercept History API calls (GitHub SPA navigation)
     const origPush = history.pushState.bind(history);
     history.pushState = (...args: Parameters<typeof history.pushState>) => {
       origPush(...args);
@@ -48,7 +45,6 @@ class ContentScript {
 
     window.addEventListener('popstate', () => this.checkPage());
 
-    // GitHub Turbo events
     document.addEventListener('turbo:load', () => this.checkPage());
     document.addEventListener('turbo:visit', () => this.checkPage());
   }
@@ -60,18 +56,14 @@ class ContentScript {
 
     const panel = new Panel();
     panel.mount();
+    panel.setContext(context);
     panel.setLoading();
     this.panel = panel;
-
-    const inline = new InlineSteps();
-    inline.mount();
-    this.inline = inline;
 
     const poller = new Poller(POLL_INTERVAL_MS);
     this.poller = poller;
 
     poller.start(async () => {
-      // Remount if GitHub's Turbo replaced the body
       if (!panel.isInDocument()) {
         log.warn('Panel detached — remounting');
         panel.mount();
@@ -84,7 +76,6 @@ class ContentScript {
           context,
         }) as { jobs?: JobState[]; error?: string };
       } catch {
-        // Extension context invalidated (e.g. extension reloaded)
         log.error('sendMessage failed — extension context may have been invalidated');
         panel.setError('NETWORK_ERROR');
         return;
@@ -106,7 +97,6 @@ class ContentScript {
       const jobs = response.jobs ?? [];
       log.info(`Updated panel: ${jobs.length} jobs`);
       panel.update(jobs);
-      inline.update(jobs);
 
       const allDone = jobs.length > 0 && jobs.every(j => j.status === 'completed');
       if (allDone) {
@@ -123,8 +113,6 @@ class ContentScript {
     this.poller = null;
     this.panel?.unmount();
     this.panel = null;
-    this.inline?.unmount();
-    this.inline = null;
     this.currentRunId = null;
   }
 }

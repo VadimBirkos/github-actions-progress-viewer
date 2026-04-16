@@ -1,4 +1,4 @@
-import { JobState, StepState } from '../types';
+import { JobState, StepState, WorkflowRunContext } from '../types';
 import { jobIcon, stepIcon } from './icons';
 
 const PANEL_ID = 'ghash-panel';
@@ -134,6 +134,18 @@ const STYLES = `
 #ghash-panel .ghash-job-meta { flex-shrink: 0; color: #8b949e; font-size: 12px; }
 #ghash-panel .ghash-job-chevron { flex-shrink: 0; color: #484f58; font-size: 11px; }
 
+#ghash-panel .ghash-job-link {
+  flex-shrink: 0;
+  color: #8b949e;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+#ghash-panel .ghash-job-link:hover { color: #58a6ff; background: rgba(88,166,255,0.1); }
+
 #ghash-panel .ghash-steps { background: #0d1117; padding: 2px 0 8px; }
 
 #ghash-panel .ghash-step {
@@ -142,22 +154,27 @@ const STYLES = `
   gap: 7px;
   padding: 4px 12px 4px 34px;
   border-left: 2px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
 }
+#ghash-panel .ghash-step:hover { background: #1c2128; }
 #ghash-panel .ghash-step.ghash-step-active {
   border-left-color: #58a6ff;
   background: rgba(88,166,255,0.06);
   padding-left: 32px;
 }
+#ghash-panel .ghash-step.ghash-step-active:hover { background: rgba(88,166,255,0.1); }
 #ghash-panel .ghash-step-icon { flex-shrink: 0; font-size: 12px; width: 14px; text-align: center; }
 #ghash-panel .ghash-step-name {
   flex: 1;
   font-size: 13px;
-  color: #6e7681;
+  font-weight: 500;
+  color: #8b949e;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#ghash-panel .ghash-step.ghash-step-active .ghash-step-name { color: #e6edf3; font-weight: 500; }
+#ghash-panel .ghash-step.ghash-step-active .ghash-step-name { color: #e6edf3; font-weight: 600; }
 
 #ghash-panel .ghash-success   { color: #3fb950; }
 #ghash-panel .ghash-failure   { color: #f85149; }
@@ -184,6 +201,7 @@ function errorMessage(code: string): string {
 
 export class Panel {
   private el: HTMLDivElement | null = null;
+  private context: WorkflowRunContext | null = null;
   private bodyEl: HTMLDivElement | null = null;
   private panelCollapsed = false;
   private collapsedJobs = new Set<number>();
@@ -262,6 +280,10 @@ export class Panel {
     this.setMessage('Private repo or insufficient permissions — add or update your personal access token in the extension popup.', false);
   }
 
+  setContext(context: WorkflowRunContext): void {
+    this.context = context;
+  }
+
   update(jobs: JobState[]): void {
     for (const job of jobs) {
       if (!this.seenJobIds.has(job.id)) {
@@ -320,6 +342,20 @@ export class Panel {
     header.appendChild(iconEl);
     header.appendChild(nameEl);
     header.appendChild(metaEl);
+
+    if (this.context) {
+      const { owner, repo, runId } = this.context;
+      const linkEl = document.createElement('a');
+      linkEl.className = 'ghash-job-link';
+      linkEl.href = `https://github.com/${owner}/${repo}/actions/runs/${runId}/job/${job.id}`;
+      linkEl.target = '_blank';
+      linkEl.rel = 'noopener noreferrer';
+      linkEl.title = 'Open logs';
+      linkEl.textContent = '↗';
+      linkEl.addEventListener('click', e => e.stopPropagation());
+      header.appendChild(linkEl);
+    }
+
     header.appendChild(chevronEl);
     wrapper.appendChild(header);
 
@@ -329,7 +365,7 @@ export class Panel {
     if (isCollapsed) stepsEl.style.display = 'none';
 
     for (let i = 0; i < job.steps.length; i++) {
-      stepsEl.appendChild(this.renderStep(job.steps[i], i === job.currentStepIndex));
+      stepsEl.appendChild(this.renderStep(job.steps[i], i === job.currentStepIndex, job.id));
     }
 
     wrapper.appendChild(stepsEl);
@@ -349,9 +385,16 @@ export class Panel {
     return wrapper;
   }
 
-  private renderStep(step: StepState, isActive: boolean): HTMLElement {
-    const row = document.createElement('div');
+  private renderStep(step: StepState, isActive: boolean, jobId: number): HTMLElement {
+    const row = document.createElement('a');
     row.className = isActive ? 'ghash-step ghash-step-active' : 'ghash-step';
+
+    if (this.context) {
+      const { owner, repo, runId } = this.context;
+      row.href = `https://github.com/${owner}/${repo}/actions/runs/${runId}/job/${jobId}#step:${step.number}:1`;
+      row.target = '_blank';
+      row.rel = 'noopener noreferrer';
+    }
 
     const { icon, cls } = stepIcon(step);
 
