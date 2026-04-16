@@ -42,7 +42,7 @@ const STYLES = `
 #ghash-panel .ghash-title {
   flex: 1;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.3px;
   text-transform: uppercase;
   color: #8b949e;
@@ -58,11 +58,11 @@ const STYLES = `
   cursor: pointer;
   padding: 0;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1;
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -88,7 +88,7 @@ const STYLES = `
   padding: 28px 16px;
   gap: 10px;
   color: #8b949e;
-  font-size: 11px;
+  font-size: 13px;
 }
 @keyframes ghash-spin { to { transform: rotate(360deg); } }
 #ghash-panel .ghash-spinner {
@@ -103,7 +103,7 @@ const STYLES = `
 #ghash-panel .ghash-message {
   padding: 20px 16px;
   color: #8b949e;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
   text-align: center;
 }
@@ -131,8 +131,8 @@ const STYLES = `
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#ghash-panel .ghash-job-meta { flex-shrink: 0; color: #8b949e; font-size: 11px; }
-#ghash-panel .ghash-job-chevron { flex-shrink: 0; color: #484f58; font-size: 10px; }
+#ghash-panel .ghash-job-meta { flex-shrink: 0; color: #8b949e; font-size: 12px; }
+#ghash-panel .ghash-job-chevron { flex-shrink: 0; color: #484f58; font-size: 11px; }
 
 #ghash-panel .ghash-steps { background: #0d1117; padding: 2px 0 8px; }
 
@@ -148,7 +148,7 @@ const STYLES = `
   background: rgba(88,166,255,0.06);
   padding-left: 32px;
 }
-#ghash-panel .ghash-step-icon { flex-shrink: 0; font-size: 11px; width: 13px; text-align: center; }
+#ghash-panel .ghash-step-icon { flex-shrink: 0; font-size: 12px; width: 14px; text-align: center; }
 #ghash-panel .ghash-step-name {
   flex: 1;
   font-size: 13px;
