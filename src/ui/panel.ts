@@ -151,7 +151,7 @@ const STYLES = `
 #ghash-panel .ghash-step-icon { flex-shrink: 0; font-size: 11px; width: 13px; text-align: center; }
 #ghash-panel .ghash-step-name {
   flex: 1;
-  font-size: 12px;
+  font-size: 13px;
   color: #6e7681;
   overflow: hidden;
   text-overflow: ellipsis;
