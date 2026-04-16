@@ -2,6 +2,7 @@ import { WorkflowRunContext, JobState } from '../types';
 import { parseRunContext } from '../utils/url';
 import { Panel } from '../ui/panel';
 import { Poller } from '../utils/polling';
+import { log } from '../utils/logger';
 
 const POLL_INTERVAL_MS = 7000;
 const SLOW_POLL_INTERVAL_MS = 30000;
@@ -20,6 +21,7 @@ class ContentScript {
     const context = parseRunContext(window.location.href);
     if (context) {
       if (context.runId !== this.currentRunId) {
+        log.info('Run page detected:', `${context.owner}/${context.repo}`, 'run', context.runId);
         this.activate(context);
       }
     } else {
@@ -62,7 +64,10 @@ class ContentScript {
 
     poller.start(async () => {
       // Remount if GitHub's Turbo replaced the body
-      if (!panel.isInDocument()) panel.mount();
+      if (!panel.isInDocument()) {
+        log.warn('Panel detached — remounting');
+        panel.mount();
+      }
 
       let response: { jobs?: JobState[]; error?: string };
       try {
@@ -72,32 +77,38 @@ class ContentScript {
         }) as { jobs?: JobState[]; error?: string };
       } catch {
         // Extension context invalidated (e.g. extension reloaded)
+        log.error('sendMessage failed — extension context may have been invalidated');
         panel.setError('NETWORK_ERROR');
         return;
       }
 
       if (response.error === 'UNAUTHORIZED') {
+        log.warn('Unauthorized — stopping poll');
         panel.setNeedsToken();
         poller.stop();
         return;
       }
 
       if (response.error) {
+        log.error('Poll error:', response.error);
         panel.setError(response.error);
         return;
       }
 
       const jobs = response.jobs ?? [];
+      log.info(`Updated panel: ${jobs.length} jobs`);
       panel.update(jobs);
 
       const allDone = jobs.length > 0 && jobs.every(j => j.status === 'completed');
       if (allDone) {
+        log.info('All jobs complete — switching to slow poll');
         poller.setIntervalMs(SLOW_POLL_INTERVAL_MS);
       }
     });
   }
 
   private deactivate(): void {
+    if (this.currentRunId) log.info('Deactivating run', this.currentRunId);
     this.poller?.stop();
     this.poller = null;
     this.panel?.unmount();

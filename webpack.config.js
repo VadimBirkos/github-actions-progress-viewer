@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = (_env, argv) => ({
@@ -27,6 +28,9 @@ module.exports = (_env, argv) => ({
     extensions: ['.tsx', '.ts', '.js'],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      __DEV__: JSON.stringify(argv.mode !== 'production'),
+    }),
     new CopyPlugin({
       patterns: [{ from: 'public', to: '.' }],
     }),

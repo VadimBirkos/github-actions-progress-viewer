@@ -1,4 +1,5 @@
 import { JobState, StepState, StepStatus, StepConclusion, JobStatus, JobConclusion } from '../types';
+import { log } from '../utils/logger';
 
 interface RawStep {
   name: string;
@@ -101,6 +102,8 @@ export class GitHubApiClient {
 
   async fetchJobs(owner: string, repo: string, runId: string): Promise<JobState[]> {
     const url = `${GitHubApiClient.BASE}/repos/${owner}/${repo}/actions/runs/${runId}/jobs?per_page=100`;
+    log.info(`GET ${owner}/${repo} run ${runId} (auth: ${this.token ? 'yes' : 'no'})`);
+
     const headers: Record<string, string> = {
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
@@ -108,6 +111,7 @@ export class GitHubApiClient {
     if (this.token) headers['Authorization'] = `Bearer ${this.token}`;
 
     const res = await fetch(url, { headers });
+    log.info(`Response: ${res.status}`);
 
     if (res.status === 401) throw new Error('UNAUTHORIZED');
     if (res.status === 403) {
@@ -118,6 +122,7 @@ export class GitHubApiClient {
     if (!res.ok) throw new Error(`API_ERROR:${res.status}`);
 
     const data: JobsApiResponse = await res.json() as JobsApiResponse;
+    log.info(`Parsed ${data.jobs.length} jobs`);
     return data.jobs.map(normalizeJob);
   }
 }
