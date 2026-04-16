@@ -1,6 +1,7 @@
 import { WorkflowRunContext, JobState } from '../types';
 import { parseRunContext } from '../utils/url';
 import { Panel } from '../ui/panel';
+import { InlineSteps } from '../ui/inline';
 import { Poller } from '../utils/polling';
 import { log } from '../utils/logger';
 
@@ -9,6 +10,7 @@ const SLOW_POLL_INTERVAL_MS = 30000;
 
 class ContentScript {
   private panel: Panel | null = null;
+  private inline: InlineSteps | null = null;
   private poller: Poller | null = null;
   private currentRunId: string | null = null;
 
@@ -59,6 +61,10 @@ class ContentScript {
     panel.setLoading();
     this.panel = panel;
 
+    const inline = new InlineSteps();
+    inline.mount();
+    this.inline = inline;
+
     const poller = new Poller(POLL_INTERVAL_MS);
     this.poller = poller;
 
@@ -98,6 +104,7 @@ class ContentScript {
       const jobs = response.jobs ?? [];
       log.info(`Updated panel: ${jobs.length} jobs`);
       panel.update(jobs);
+      inline.update(jobs);
 
       const allDone = jobs.length > 0 && jobs.every(j => j.status === 'completed');
       if (allDone) {
@@ -113,6 +120,8 @@ class ContentScript {
     this.poller = null;
     this.panel?.unmount();
     this.panel = null;
+    this.inline?.unmount();
+    this.inline = null;
     this.currentRunId = null;
   }
 }
