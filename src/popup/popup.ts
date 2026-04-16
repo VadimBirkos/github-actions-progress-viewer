@@ -3,6 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveBtn = document.getElementById('save') as HTMLButtonElement;
   const clearBtn = document.getElementById('clear') as HTMLButtonElement;
   const statusEl = document.getElementById('status') as HTMLDivElement;
+  const resizeBtn = document.getElementById('resize') as HTMLButtonElement;
+
+  resizeBtn.addEventListener('click', () => {
+    const expanded = document.body.classList.toggle('expanded');
+    resizeBtn.textContent = expanded ? '⤡' : '⤢';
+    resizeBtn.title = expanded ? 'Collapse popup' : 'Expand popup';
+  });
 
   // Load existing token (show placeholder dots if set)
   chrome.runtime.sendMessage({ type: 'GET_TOKEN' }).then((res: unknown) => {
