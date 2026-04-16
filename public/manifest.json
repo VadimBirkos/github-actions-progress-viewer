@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub Actions Step Highlighter",
+  "version": "1.0.0",
+  "description": "See the currently running step for each GitHub Actions job without opening logs.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://github.com/*",
+    "https://api.github.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*/*/actions/runs/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "GitHub Actions Step Highlighter"
+  }
+}

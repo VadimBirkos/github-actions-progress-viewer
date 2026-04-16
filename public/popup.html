@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Actions Step Highlighter</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Actions Step Highlighter</h1>
+    <p class="hint">
+      Public repos work without a token. For private repos, provide a
+      <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">personal access token</a>
+      with <code>repo</code> scope.
+    </p>
+    <div class="field">
+      <label for="token">Personal Access Token</label>
+      <input type="password" id="token" placeholder="ghp_…" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="actions">
+      <button id="save" class="btn-primary">Save</button>
+      <button id="clear" class="btn-secondary">Clear</button>
+    </div>
+    <div id="status" class="status" aria-live="polite"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
